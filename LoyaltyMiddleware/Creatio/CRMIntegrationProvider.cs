@@ -20,7 +20,7 @@ namespace LoyaltyMiddleware.Creatio
 		private bool _useLocalCookie;
 
 		public CRMIntegrationProvider(bool useLocalCookie = false)
-		{
+		{ 
 			_useLocalCookie = useLocalCookie;
 			GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.BPMLogin, out _login);
 			GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.BPMPassword, out _password);
