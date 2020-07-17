@@ -7,7 +7,7 @@ namespace LoyaltyMiddleware.MiddlewareHandlers
 {
 	public class InfoHandler : IRequestHandler
 	{
-		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> responseData)
+		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData)
 		{
 			//todo: confirm middlewarecode
 

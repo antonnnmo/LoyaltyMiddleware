@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 
 namespace LoyaltyMiddleware.Controllers
 {
-    [Route("contact")]
-    [ApiController]
-    public class PersonalAreaController : ControllerBase
-    {
+	[Route("contact")]
+	[ApiController]
+	public class PersonalAreaController : ControllerBase
+	{
 		[HttpPost("info")]
-		public ActionResult Info([FromBody]Dictionary<string, object> request)
+		public ActionResult Info([FromBody] Dictionary<string, object> request)
 		{
 			return HandleRequest(request, "info", new InfoHandler());
 		}
@@ -36,7 +36,7 @@ namespace LoyaltyMiddleware.Controllers
 			{
 				HttpContext.Response.Headers.Add("Content-Type", "application/json");
 				var responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.ResponseStr);
-				var handledResponse = handler.GetHandledResponse(responseData);
+				var handledResponse = handler.GetHandledResponse(request, responseData);
 				return Ok(handledResponse);
 			}
 			else

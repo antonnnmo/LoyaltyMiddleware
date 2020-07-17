@@ -2,14 +2,14 @@
 
 namespace LoyaltyMiddleware.MiddlewareHandlers
 {
-	internal class ConfirmHandler: IRequestHandler
+	internal class ConfirmHandler : IRequestHandler
 	{
 		public ConfirmHandler()
 		{
 
 		}
 
-		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> responseData)
+		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData)
 		{
 			//todo: confirm middlewarecode
 

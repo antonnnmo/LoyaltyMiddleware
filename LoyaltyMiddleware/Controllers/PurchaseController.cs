@@ -11,13 +11,13 @@ namespace LoyaltyMiddleware.Controllers
 	public class PurchaseController : ControllerBase
 	{
 		[HttpPost("calculate")]
-		public ActionResult Calculate([FromBody]Dictionary<string, object> request)
+		public ActionResult Calculate([FromBody] Dictionary<string, object> request)
 		{
 			return HandleRequest(request, "calculate", new CalculateHandler());
 		}
 
 		[HttpPost("confirm")]
-		public ActionResult Confirm([FromBody]Dictionary<string, object> request)
+		public ActionResult Confirm([FromBody] Dictionary<string, object> request)
 		{
 			return HandleRequest(request, "confirm", new ConfirmHandler());
 		}
@@ -38,7 +38,7 @@ namespace LoyaltyMiddleware.Controllers
 			{
 				HttpContext.Response.Headers.Add("Content-Type", "application/json");
 				var responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.ResponseStr);
-				var handledResponse = handler.GetHandledResponse(responseData);
+				var handledResponse = handler.GetHandledResponse(request, responseData);
 				return Ok(handledResponse);
 			}
 			else
