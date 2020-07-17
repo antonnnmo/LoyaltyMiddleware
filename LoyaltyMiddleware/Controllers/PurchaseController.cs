@@ -10,6 +10,10 @@ namespace LoyaltyMiddleware.Controllers
 	[ApiController]
 	public class PurchaseController : ControllerBase
 	{
+		public PurchaseController()
+		{
+		}
+
 		[HttpPost("calculate")]
 		public ActionResult Calculate([FromBody] Dictionary<string, object> request)
 		{
