@@ -11,7 +11,7 @@ namespace LoyaltyMiddleware.DBProviders
 	{
 		public virtual string GetConnectionString()
 		{
-			GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.ConnectionString, out string connString);
+			GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.ProcessingConnectionString, out string connString);
 			return connString;
 		}
 

@@ -1,21 +1,25 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
+﻿using LoyaltyMiddleware.Cache;
+using Microsoft.EntityFrameworkCore;
 
-//namespace RedmondLoyaltyMiddleware.Models.InternalDB
-//{
-//	public class MiddlewareDBContext: DbContext
-//	{
-//		public MiddlewareDBContext(): base()
-//		{
+namespace RedmondLoyaltyMiddleware.Models.InternalDB
+{
+	public class MiddlewareDBContext : DbContext
+	{
+		public MiddlewareDBContext() : base()
+		{
 
-//		}
-//        public MiddlewareDBContext(DbContextOptions<MiddlewareDBContext> options) : base(options)
-//        {
-//        }
+		}
+		public MiddlewareDBContext(DbContextOptions<MiddlewareDBContext> options) : base(options)
+		{
+		}
 
-//        public DbSet<PromocodeUseAttempt> PromocodeUseAttempts { get; set; }
-//    }
-//}
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.ConnectionString, out string connectionString);
+			optionsBuilder.UseNpgsql(connectionString);
+		}
+
+		public DbSet<PromocodeUseAttempt> PromocodeUseAttempts { get; set; }
+		public DbSet<PromocodePool> PromocodePools { get; set; }
+	}
+}

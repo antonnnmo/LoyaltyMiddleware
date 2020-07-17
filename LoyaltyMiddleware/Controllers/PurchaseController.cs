@@ -3,6 +3,7 @@ using LoyaltyMiddleware.Loyalty;
 using LoyaltyMiddleware.MiddlewareHandlers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RedmondLoyaltyMiddleware.Models.InternalDB;
 
 namespace LoyaltyMiddleware.Controllers
 {
@@ -10,8 +11,11 @@ namespace LoyaltyMiddleware.Controllers
 	[ApiController]
 	public class PurchaseController : ControllerBase
 	{
-		public PurchaseController()
+		private MiddlewareDBContext _dbContext;
+
+		public PurchaseController(MiddlewareDBContext context)
 		{
+			_dbContext = context;
 		}
 
 		[HttpPost("calculate")]

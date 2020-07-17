@@ -21,6 +21,7 @@ namespace LoyaltyMiddleware.Cache
 			Cache.Set(CacheKeys.ProcessingUri, configuration.GetValue<string>(CacheKeys.ProcessingUri));
 			Cache.Set(CacheKeys.PersonalAreaUri, configuration.GetValue<string>(CacheKeys.PersonalAreaUri));
 			Cache.Set(CacheKeys.ConnectionString, configuration.GetValue<string>(CacheKeys.ConnectionString));
+			Cache.Set(CacheKeys.ProcessingConnectionString, configuration.GetValue<string>(CacheKeys.ProcessingConnectionString));
 			Cache.Set(CacheKeys.PersonalAreaConnectionString, configuration.GetValue<string>(CacheKeys.PersonalAreaConnectionString));
 			Cache.Set(CacheKeys.BPMAuthCookieLifetimeMinutes, configuration.GetValue<string>(CacheKeys.BPMAuthCookieLifetimeMinutes));
 			Cache.Set(CacheKeys.BPMLogin, configuration.GetSection("BPMCredentials").GetValue<string>("login"));
@@ -37,6 +38,7 @@ namespace LoyaltyMiddleware.Cache
 			public static string BPMCSRF { get { return "BPMCSRF"; } }
 			public static string ProcessingUri { get { return "ProcessingUri"; } }
 			public static string ConnectionString { get { return "ConnectionString"; } }
+			public static string ProcessingConnectionString { get { return "ProcessingConnectionString"; } }
 			public static string PersonalAreaUri { get { return "PersonalAreaUri"; } }
 			public static string PersonalAreaConnectionString { get { return "PersonalAreaConnectionString"; } }
 			public static string BPMAuthCookieLifetimeMinutes { get { return "BPMAuthCookieLifetimeMinutes"; } }

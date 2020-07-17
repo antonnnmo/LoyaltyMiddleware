@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using LoyaltyMiddleware.Cache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using RedmondLoyaltyMiddleware.Models.InternalDB;
 
 namespace LoyaltyMiddleware
 {
@@ -29,11 +28,12 @@ namespace LoyaltyMiddleware
 		{
 			services.AddControllers();
 			services.AddMemoryCache();
+			services.AddDbContext<MiddlewareDBContext>();
 
 			GlobalCacheReader.LoadFromConfiguration(Configuration);
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, MiddlewareDBContext dBContext)
 		{
 			loggerFactory.AddLog4Net();
 			if (env.IsDevelopment())
@@ -51,6 +51,8 @@ namespace LoyaltyMiddleware
 			{
 				endpoints.MapControllers();
 			});
+
+			dBContext.Database.Migrate();
 		}
 	}
 }
