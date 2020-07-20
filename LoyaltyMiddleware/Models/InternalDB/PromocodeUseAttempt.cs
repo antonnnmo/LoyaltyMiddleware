@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RedmondLoyaltyMiddleware.Models.InternalDB
 {
@@ -11,5 +8,10 @@ namespace RedmondLoyaltyMiddleware.Models.InternalDB
 		public string Promocode { get; set; }
 		public DateTime Date { get; set; }
 		public Guid PoolId { get; set; }
+		public Guid StatusId { get; set; }
+		public bool IsNeedCreateNew { get; set; }
+		public string Error { get; set; }
+		public bool IsError { get; set; }
+		public Guid ContactId { get; set; }
 	}
 }

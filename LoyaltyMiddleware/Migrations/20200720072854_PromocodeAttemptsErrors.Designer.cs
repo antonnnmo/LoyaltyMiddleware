@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RedmondLoyaltyMiddleware.Models.InternalDB;
@@ -9,9 +10,10 @@ using RedmondLoyaltyMiddleware.Models.InternalDB;
 namespace RedmondLoyaltyMiddleware.Migrations
 {
     [DbContext(typeof(MiddlewareDBContext))]
-    partial class MiddlewareDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200720072854_PromocodeAttemptsErrors")]
+    partial class PromocodeAttemptsErrors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +45,6 @@ namespace RedmondLoyaltyMiddleware.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ContactId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")

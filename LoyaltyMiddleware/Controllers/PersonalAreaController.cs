@@ -36,7 +36,7 @@ namespace LoyaltyMiddleware.Controllers
 			{
 				HttpContext.Response.Headers.Add("Content-Type", "application/json");
 				var responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.ResponseStr);
-				var handledResponse = handler.GetHandledResponse(request, responseData);
+				var handledResponse = handler.GetHandledResponse(request, responseData, null, null);
 				return Ok(handledResponse);
 			}
 			else

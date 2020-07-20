@@ -3,6 +3,7 @@ using LoyaltyMiddleware.Loyalty;
 using LoyaltyMiddleware.MiddlewareHandlers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RedmondLoyaltyMiddleware.MiddlewareHandlers;
 using RedmondLoyaltyMiddleware.Models.InternalDB;
 
 namespace LoyaltyMiddleware.Controllers
@@ -11,7 +12,7 @@ namespace LoyaltyMiddleware.Controllers
 	[ApiController]
 	public class PurchaseController : ControllerBase
 	{
-		private MiddlewareDBContext _dbContext;
+		private readonly MiddlewareDBContext _dbContext;
 
 		public PurchaseController(MiddlewareDBContext context)
 		{
@@ -21,19 +22,31 @@ namespace LoyaltyMiddleware.Controllers
 		[HttpPost("calculate")]
 		public ActionResult Calculate([FromBody] Dictionary<string, object> request)
 		{
-			return HandleRequest(request, "calculate", new CalculateHandler());
+			return HandleRequest(request, "calculate", new PreCalculateHandler(), new CalculateHandler());
 		}
 
 		[HttpPost("confirm")]
 		public ActionResult Confirm([FromBody] Dictionary<string, object> request)
 		{
-			return HandleRequest(request, "confirm", new ConfirmHandler());
+			return HandleRequest(request, "confirm", null, new ConfirmHandler());
 		}
 
-		private ActionResult HandleRequest(Dictionary<string, object> request, string method, IRequestHandler handler)
+		private ActionResult HandleRequest(Dictionary<string, object> request, string method, IPreRequestHandler preRequestHandler, IRequestHandler afterRequestHandler)
 		{
 			var authHeader = HttpContext.Request.Headers["Authorization"];
 			if (authHeader.Count == 0) return Unauthorized();
+
+			Logger.LogInfo($"started preRequest {method}", "");
+
+			Dictionary<string, object> additionalResponseData = null;
+			if (preRequestHandler != null)
+			{
+				var result = preRequestHandler.GetHandledRequest(request, _dbContext);
+				request = result.Request;
+				additionalResponseData = result.AdditionalResponseData;
+			}
+
+			Logger.LogInfo($"finished preRequest {method}", "");
 
 			Logger.LogInfo($"started {method} request", "");
 
@@ -41,12 +54,11 @@ namespace LoyaltyMiddleware.Controllers
 
 			Logger.LogInfo($"finished {method} request", "");
 
-
 			if (response.IsSuccess)
 			{
 				HttpContext.Response.Headers.Add("Content-Type", "application/json");
 				var responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.ResponseStr);
-				var handledResponse = handler.GetHandledResponse(request, responseData);
+				var handledResponse = afterRequestHandler.GetHandledResponse(request, responseData, additionalResponseData, _dbContext);
 				return Ok(handledResponse);
 			}
 			else

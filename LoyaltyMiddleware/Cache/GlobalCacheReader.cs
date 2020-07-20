@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LoyaltyMiddleware.Cache
 {
@@ -24,6 +21,8 @@ namespace LoyaltyMiddleware.Cache
 			Cache.Set(CacheKeys.ProcessingConnectionString, configuration.GetValue<string>(CacheKeys.ProcessingConnectionString));
 			Cache.Set(CacheKeys.PersonalAreaConnectionString, configuration.GetValue<string>(CacheKeys.PersonalAreaConnectionString));
 			Cache.Set(CacheKeys.BPMAuthCookieLifetimeMinutes, configuration.GetValue<string>(CacheKeys.BPMAuthCookieLifetimeMinutes));
+			Cache.Set(CacheKeys.PromocodeAttemptsTransferPackSize, configuration.GetValue<int>(CacheKeys.PromocodeAttemptsTransferPackSize));
+			Cache.Set(CacheKeys.PromocodeAttemptsTransferPeriodInMinutes, configuration.GetValue<int>(CacheKeys.PromocodeAttemptsTransferPeriodInMinutes));
 			Cache.Set(CacheKeys.BPMLogin, configuration.GetSection("BPMCredentials").GetValue<string>("login"));
 			Cache.Set(CacheKeys.BPMPassword, configuration.GetSection("BPMCredentials").GetValue<string>("password"));
 			Cache.Set(CacheKeys.BPMUri, configuration.GetSection("BPMCredentials").GetValue<string>("uri"));
@@ -42,6 +41,8 @@ namespace LoyaltyMiddleware.Cache
 			public static string PersonalAreaUri { get { return "PersonalAreaUri"; } }
 			public static string PersonalAreaConnectionString { get { return "PersonalAreaConnectionString"; } }
 			public static string BPMAuthCookieLifetimeMinutes { get { return "BPMAuthCookieLifetimeMinutes"; } }
+			public static string PromocodeAttemptsTransferPeriodInMinutes { get { return "PromocodeAttemptsTransferPeriodInMinutes"; } }
+			public static string PromocodeAttemptsTransferPackSize { get { return "PromocodeAttemptsTransferPackSize"; } }
 		}
 
 		public static bool GetValue<T>(string key, out T value)

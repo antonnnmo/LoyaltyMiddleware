@@ -1,47 +1,26 @@
-﻿using LoyaltyMiddleware.DBProviders;
-using RedmondLoyaltyMiddleware.Models;
-using System;
+﻿using RedmondLoyaltyMiddleware.Models.InternalDB;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 
 namespace LoyaltyMiddleware.MiddlewareHandlers
 {
 	public class CalculateHandler : IRequestHandler
 	{
-		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData)
+		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData, Dictionary<string, object> additionalResponseData, MiddlewareDBContext dbContext)
 		{
-			//todo: calculate middlewarecode
-			if (requestData.ContainsKey("promoCodes"))
+			if (additionalResponseData != null) 
 			{
-				var promocodes = requestData["promoCodes"] as Newtonsoft.Json.Linq.JArray;
-				if (promocodes.Count > 0)
-				{
-					var promocodesDictionary = new Dictionary<string, PromocodeInformation>();
-					var provider = new LoyaltyDBProvider();
-					/*foreach (string promocode in promocodes)
-					{
-						if (!promocodesDictionary.ContainsKey(promocode))
-						{
-							promocodesDictionary[promocode] = provider.ExecuteSelectQuery(
-								@"SELECT 
-									pool.""CanUseManyTimes"", 
-									promocode.""ContactId"", 
-									promocode.""IsUsed"", 
-									pool.""IsActual"", 
-									pool.""UseCountRestriction"" 
-								FROM public.""PromoCode"" promocode
-								join public.""PromoCodePool"" pool on pool.""Id"" = promocode.""PoolId"" 
-								Where promocode.""Code"" = '{0}'", ReadPromocodeInformation, promocode);
-						}
-					}*/
-				}
+				responseData = new Dictionary<string, object>[] { responseData, additionalResponseData }.SelectMany(dict => dict)
+						 .ToDictionary(pair => pair.Key, pair => pair.Value);
 			}
 			return responseData;
 		}
 
-		public PromocodeInformation ReadPromocodeInformation(IDataReader reader) 
+		/*private Guid GetContactId(Dictionary<string, object> responseData)
 		{
-			return new PromocodeInformation();
-		}
+			var data = responseData["data"] as JObject;
+			var client = data.ToObject<Dictionary<string, object>>()["client"] as JObject;
+			return new Guid(client.ToObject<Dictionary<string, object>>()["id"].ToString());
+		}*/
 	}
 }
