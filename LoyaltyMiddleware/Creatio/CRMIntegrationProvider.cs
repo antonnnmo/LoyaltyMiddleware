@@ -11,13 +11,13 @@ namespace LoyaltyMiddleware.Creatio
 {
 	public class CRMIntegrationProvider
 	{
-		private string _login;
-		private string _password;
-		private string _uri;
-		private string _cookieLifetime;
+		private readonly string _login;
+		private readonly string _password;
+		private readonly string _uri;
+		private readonly string _cookieLifetime;
 		private CookieContainer _bpmCookieContainer;
 		private string _csrf;
-		private bool _useLocalCookie;
+		private readonly bool _useLocalCookie;
 
 		public CRMIntegrationProvider(bool useLocalCookie = false)
 		{ 
@@ -30,14 +30,13 @@ namespace LoyaltyMiddleware.Creatio
 
 		public RequestResult MakeRequest(string bpmServiceUri, string body)
 		{
-			HttpWebRequest req;
 			CookieContainer bpmCookieContainer = null;
 
 			if (_useLocalCookie)
 			{
 				if (_bpmCookieContainer == null)
 				{
-					_csrf = Authorize(out req, out _bpmCookieContainer);
+					_csrf = Authorize(out _bpmCookieContainer);
 					bpmCookieContainer = _bpmCookieContainer;
 				}
 			}
@@ -45,19 +44,19 @@ namespace LoyaltyMiddleware.Creatio
 			{
 				if (!GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.BPMCookie, out bpmCookieContainer))
 				{
-					var csrf = Authorize(out req, out bpmCookieContainer);
+					var csrf = Authorize( out bpmCookieContainer);
 					GlobalCacheReader.SetTemporaryValue(GlobalCacheReader.CacheKeys.BPMCookie, bpmCookieContainer, TimeSpan.FromMinutes(Convert.ToInt32(_cookieLifetime)));
 					GlobalCacheReader.SetTemporaryValue(GlobalCacheReader.CacheKeys.BPMCSRF, csrf, TimeSpan.FromMinutes(Convert.ToInt32(_cookieLifetime)));
 				}
 			}
 
-			return Request(bpmServiceUri, body, out req, bpmCookieContainer);
+			return Request(bpmServiceUri, body, out _, bpmCookieContainer);
 		}
 
-		private string Authorize(out HttpWebRequest req, out CookieContainer bpmCookieContainer)
+		private string Authorize(out CookieContainer bpmCookieContainer)
 		{
 			//Вызов сервиса с авторизацией    
-			req = (HttpWebRequest)WebRequest.Create(String.Format("{0}/ServiceModel/AuthService.svc/Login", _uri));
+			var req = (HttpWebRequest)WebRequest.Create(String.Format("{0}/ServiceModel/AuthService.svc/Login", _uri));
 
 			req.Method = "POST";
 			req.ContentType = "application/json";
@@ -80,7 +79,7 @@ namespace LoyaltyMiddleware.Creatio
 				streamWriter.Close();
 			}
 
-			var httpResponse = req.GetResponse();
+			req.GetResponse();
 			var cookies = bpmCookieContainer.GetCookies(new Uri(_uri));
 			try
 			{
@@ -103,9 +102,12 @@ namespace LoyaltyMiddleware.Creatio
 			req.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
 			req.Timeout = 10 * 1000 * 60;
 
-			var csrfToken = String.Empty;
-
-			if (_useLocalCookie) csrfToken = _csrf;
+			string csrfToken;
+			if (_useLocalCookie)
+			{
+				csrfToken = _csrf;
+				req.CookieContainer = _bpmCookieContainer;
+			}
 			else GlobalCacheReader.GetValue(GlobalCacheReader.CacheKeys.BPMCSRF, out csrfToken);
 
 			if (!String.IsNullOrEmpty(csrfToken))
@@ -115,26 +117,18 @@ namespace LoyaltyMiddleware.Creatio
 
 			using (var requestStream = req.GetRequestStream())
 			{
-				using (var streamWriter = new StreamWriter(requestStream))
-				{
-					streamWriter.Write(body);
-					streamWriter.Flush();
-					streamWriter.Close();
-				}
+				using var streamWriter = new StreamWriter(requestStream);
+				streamWriter.Write(body);
+				streamWriter.Flush();
+				streamWriter.Close();
 			}
 
 			try
 			{
-				using (var response = req.GetResponse())
-				{
-					using (var responseStream = response.GetResponseStream())
-					{
-						using (var streamReader = new StreamReader(responseStream))
-						{
-							return new RequestResult() { IsSuccess = true, ResponseStr = streamReader.ReadToEnd() };
-						}
-					}
-				}
+				using var response = req.GetResponse();
+				using var responseStream = response.GetResponseStream();
+				using var streamReader = new StreamReader(responseStream);
+				return new RequestResult() { IsSuccess = true, ResponseStr = streamReader.ReadToEnd() };
 			}
 			catch (WebException e)
 			{
@@ -143,12 +137,10 @@ namespace LoyaltyMiddleware.Creatio
 					Logger.LogError($"{bpmServiceUri} error: ", e);
 					return new RequestResult() { IsSuccess = false, ResponseStr = $"{e.Message} null response" };
 				}
-				using (var streamReader = new StreamReader(e.Response.GetResponseStream()))
-				{
-					var res = streamReader.ReadToEnd();
-					Logger.LogError($"{bpmServiceUri} error. {res}", e);
-					return new RequestResult() { IsSuccess = false, ResponseStr = $"{e.Message} {res}" };
-				}
+				using var streamReader = new StreamReader(e.Response.GetResponseStream());
+				var res = streamReader.ReadToEnd();
+				Logger.LogError($"{bpmServiceUri} error. {res}", e);
+				return new RequestResult() { IsSuccess = false, ResponseStr = $"{e.Message} {res}" };
 			}
 		}
 	}

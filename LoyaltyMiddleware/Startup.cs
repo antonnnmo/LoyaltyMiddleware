@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentScheduler;
 using LoyaltyMiddleware.Cache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RedmondLoyaltyMiddleware.Models.InternalDB;
+using RedmondLoyaltyMiddleware.Schedulle;
 
 namespace LoyaltyMiddleware
 {
@@ -26,9 +28,10 @@ namespace LoyaltyMiddleware
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllers().AddNewtonsoftJson();
 			services.AddMemoryCache();
 			services.AddDbContext<MiddlewareDBContext>();
+			services.AddTransient<PromocodeAttemptsJob>();
 
 			GlobalCacheReader.LoadFromConfiguration(Configuration);
 		}
@@ -53,6 +56,8 @@ namespace LoyaltyMiddleware
 			});
 
 			dBContext.Database.Migrate();
+
+			JobManager.Initialize(new Scheduller(app.ApplicationServices));
 		}
 	}
 }

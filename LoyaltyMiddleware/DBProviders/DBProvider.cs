@@ -17,47 +17,34 @@ namespace LoyaltyMiddleware.DBProviders
 
 		public T ExecuteSelectQuery<T>(string command, Func<NpgsqlDataReader, T> readerMethod, params object[] parameters)
 		{
-			using (var conn = new NpgsqlConnection(GetConnectionString()))
-			{
-				conn.Open();
+			using var conn = new NpgsqlConnection(GetConnectionString());
+			conn.Open();
 
-				// Insert some data
-				using (var cmd = new NpgsqlCommand(ValidateCommand(command, parameters), conn))
-				{
-					using (var reader = cmd.ExecuteReader())
-					{
-						return readerMethod(reader);
-					}
-				}
-			}
+			// Insert some data
+
+			using var cmd = new NpgsqlCommand(ValidateCommand(command, parameters), conn);
+			using var reader = cmd.ExecuteReader();
+			return readerMethod(reader);
 		}
 
 		public T ExecuteScalar<T>(string command, T defValue, params string[] parameters)
 		{
-			using (var conn = new NpgsqlConnection(GetConnectionString()))
-			{
-				conn.Open();
+			using var conn = new NpgsqlConnection(GetConnectionString());
+			conn.Open();
 
-				// Insert some data
-				using (var cmd = new NpgsqlCommand(ValidateCommand(command, parameters), conn))
-				{
-					var res = cmd.ExecuteScalar();
-					if (res == null || res is DBNull) return defValue;
-					return (T)res;
-				}
-			}
+			// Insert some data
+			using var cmd = new NpgsqlCommand(ValidateCommand(command, parameters), conn);
+			var res = cmd.ExecuteScalar();
+			if (res == null || res is DBNull) return defValue;
+			return (T)res;
 		}
 
 		public int ExecuteNonQuery(string command, params string[] parameters)
 		{
-			using (var conn = new NpgsqlConnection(GetConnectionString()))
-			{
-				conn.Open();
-				using (var sqlCommand = new NpgsqlCommand(ValidateCommand(command, parameters), conn))
-				{
-					return sqlCommand.ExecuteNonQuery();
-				}
-			}
+			using var conn = new NpgsqlConnection(GetConnectionString());
+			conn.Open();
+			using var sqlCommand = new NpgsqlCommand(ValidateCommand(command, parameters), conn);
+			return sqlCommand.ExecuteNonQuery();
 		}
 
 		private string ValidateCommand(string command, object[] parameters)

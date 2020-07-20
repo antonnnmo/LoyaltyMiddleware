@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RedmondLoyaltyMiddleware.Models.InternalDB;
@@ -9,9 +10,10 @@ using RedmondLoyaltyMiddleware.Models.InternalDB;
 namespace RedmondLoyaltyMiddleware.Migrations
 {
     [DbContext(typeof(MiddlewareDBContext))]
-    partial class MiddlewareDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200717123956_PromocodeAttempt_IsNeedCreateNew_Column")]
+    partial class PromocodeAttempt_IsNeedCreateNew_Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,17 +47,8 @@ namespace RedmondLoyaltyMiddleware.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ContactId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Error")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsError")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsNeedCreateNew")
                         .HasColumnType("boolean");
@@ -65,9 +58,6 @@ namespace RedmondLoyaltyMiddleware.Migrations
 
                     b.Property<string>("Promocode")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

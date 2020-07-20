@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RedmondLoyaltyMiddleware.Models.InternalDB;
+using System.Collections.Generic;
 
 namespace LoyaltyMiddleware.MiddlewareHandlers
 {
@@ -9,7 +10,7 @@ namespace LoyaltyMiddleware.MiddlewareHandlers
 
 		}
 
-		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData)
+		public Dictionary<string, object> GetHandledResponse(Dictionary<string, object> requestData, Dictionary<string, object> responseData, Dictionary<string, object> additionalResponseData, MiddlewareDBContext dbContext)
 		{
 			//todo: confirm middlewarecode
 
