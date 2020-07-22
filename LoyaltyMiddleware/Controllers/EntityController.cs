@@ -9,13 +9,6 @@ using RedmondLoyaltyMiddleware.Models.InternalDB;
 
 namespace RedmondLoyaltyMiddleware.Controllers
 {
-	public enum SqlOperation
-	{
-		Insert = 1,
-		Update,
-		Delete
-	}
-
 	[Route("entity")]
 	[ApiController]
 	public class EntityController : ControllerBase
@@ -32,13 +25,15 @@ namespace RedmondLoyaltyMiddleware.Controllers
 		{
 			if (request.ContainsKey("entityName"))
 			{
-				switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				//switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				switch (request.GetValueOrDefault("entityName"))
 				{
 					case "PromocodePool":
 						{
 							if (request.ContainsKey("entity"))
 							{
-								var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
 								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
 								provider.ExecuteNonQuery(
@@ -60,13 +55,15 @@ namespace RedmondLoyaltyMiddleware.Controllers
 		{
 			if (request.ContainsKey("entityName"))
 			{
-				switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				//switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				switch (request.GetValueOrDefault("entityName"))
 				{
 					case "PromocodePool":
 						{
 							if (request.ContainsKey("entity"))
 							{
-								var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
 								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
 								provider.ExecuteNonQuery(
@@ -90,13 +87,15 @@ namespace RedmondLoyaltyMiddleware.Controllers
 		{
 			if (request.ContainsKey("entityName"))
 			{
-				switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				//switch (((System.Text.Json.JsonElement)request.GetValueOrDefault("entityName")).GetString())
+				switch (request.GetValueOrDefault("entityName"))
 				{
 					case "PromocodePool":
 						{
 							if (request.ContainsKey("entity"))
 							{
-								var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
+								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
 								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
 								provider.ExecuteNonQuery(
@@ -110,6 +109,8 @@ namespace RedmondLoyaltyMiddleware.Controllers
 				}
 			}
 			return BadRequest();
+
+			
 		}
 
 	}
