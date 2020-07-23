@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using LoyaltyMiddleware;
 using LoyaltyMiddleware.Loyalty;
 using LoyaltyMiddleware.MiddlewareHandlers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using RedmondLoyaltyMiddleware.Models.InternalDB;
 
@@ -35,12 +38,23 @@ namespace RedmondLoyaltyMiddleware.Controllers
 								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
 								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
-								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
-								provider.ExecuteNonQuery(
-									@"Insert into public.""PromocodePools""
-										(""Id"", ""CanUseManyTimes"", ""IsActual"", ""UseCountRestriction"")
-										Values ('{0}', '{1}', '{2}', '{3}')",
-									pool.Id.ToString(), pool.CanUseManyTimes.ToString(), pool.IsActual.ToString(), pool.UseCountRestriction.ToString());
+								if (!_dbContext.PromocodePools.Any(x => x.Id == pool.Id))
+								{
+									_dbContext.Add(pool);
+									_dbContext.SaveChanges();
+								}
+								else
+								{
+									_dbContext.Update(pool);
+									_dbContext.SaveChanges();
+								}
+
+								//var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
+								//provider.ExecuteNonQuery(
+								//	@"Insert into public.""PromocodePools""
+								//		(""Id"", ""CanUseManyTimes"", ""IsActual"", ""UseCountRestriction"")
+								//		Values ('{0}', '{1}', '{2}', '{3}')",
+								//	pool.Id.ToString(), pool.CanUseManyTimes.ToString(), pool.IsActual.ToString(), pool.UseCountRestriction.ToString());
 								return Ok();
 							}
 						}
@@ -65,14 +79,25 @@ namespace RedmondLoyaltyMiddleware.Controllers
 								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
 								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
-								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
-								provider.ExecuteNonQuery(
-									@"Update public.""PromocodePools""
-										set ""CanUseManyTimes"" = '{1}',
-											""IsActual"" = '{2}',
-											""UseCountRestriction"" = '{3}'
-										where ""Id"" = '{0}'",
-									pool.Id.ToString(), pool.CanUseManyTimes.ToString(), pool.IsActual.ToString(), pool.UseCountRestriction.ToString());
+								if (_dbContext.PromocodePools.Any(x=>x.Id == pool.Id))
+								{
+									_dbContext.Update(pool);
+									_dbContext.SaveChanges();
+								}
+								else
+								{
+									_dbContext.Add(pool);
+									_dbContext.SaveChanges();
+								}							
+
+								//var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
+								//provider.ExecuteNonQuery(
+								//	@"Update public.""PromocodePools""
+								//		set ""CanUseManyTimes"" = '{1}',
+								//			""IsActual"" = '{2}',
+								//			""UseCountRestriction"" = '{3}'
+								//		where ""Id"" = '{0}'",
+								//	pool.Id.ToString(), pool.CanUseManyTimes.ToString(), pool.IsActual.ToString(), pool.UseCountRestriction.ToString());
 								return Ok();
 							}
 						}
@@ -97,11 +122,17 @@ namespace RedmondLoyaltyMiddleware.Controllers
 								//var pool = JsonConvert.DeserializeObject<PromocodePool>(((System.Text.Json.JsonElement)request.GetValueOrDefault("entity")).ToString());
 								var pool = JsonConvert.DeserializeObject<PromocodePool>((request.GetValueOrDefault("entity")).ToString());
 
-								var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
-								provider.ExecuteNonQuery(
-									@"Delete from public.""PromocodePools""
-										where ""Id"" = '{0}'",
-									pool.Id.ToString());
+								if (_dbContext.PromocodePools.Any(x => x.Id == pool.Id))
+								{
+									_dbContext.Remove(pool);
+									_dbContext.SaveChanges();
+								}
+									
+								//var provider = new LoyaltyMiddleware.DBProviders.MiddlewareDBProvider();
+								//provider.ExecuteNonQuery(
+								//	@"Delete from public.""PromocodePools""
+								//		where ""Id"" = '{0}'",
+								//	pool.Id.ToString());
 								return Ok();
 							}
 						}
