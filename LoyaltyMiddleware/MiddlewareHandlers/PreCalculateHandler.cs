@@ -20,7 +20,7 @@ namespace RedmondLoyaltyMiddleware.MiddlewareHandlers
 			if (requestData.ContainsKey("promoCodes"))
 			{
 				var promocodes = requestData["promoCodes"] as Newtonsoft.Json.Linq.JArray;
-				if (promocodes.Count > 0)
+				if (promocodes != null && promocodes.Count > 0)
 				{
 					var contactId = GetContactId(requestData);
 					if (contactId != Guid.Empty)
@@ -144,6 +144,8 @@ namespace RedmondLoyaltyMiddleware.MiddlewareHandlers
 				var mobilePhone = client.ContainsKey("mobilePhone") ? client["mobilePhone"] ?? String.Empty : String.Empty;
 				var cardNumber = client.ContainsKey("cardNumber") ? client["cardNumber"] ?? String.Empty : String.Empty;
 				var id = client.ContainsKey("id") ? client["id"] ?? Guid.Empty.ToString() : Guid.Empty.ToString();
+
+				mobilePhone = mobilePhone.Replace("+", String.Empty);
 
 				var provider = new LoyaltyDBProvider();
 				var contactId = provider.ExecuteScalar<Guid>(@"Select ""Id"" from public.""Contact""
