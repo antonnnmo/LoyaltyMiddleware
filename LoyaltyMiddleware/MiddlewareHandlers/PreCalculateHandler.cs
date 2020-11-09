@@ -63,7 +63,6 @@ namespace RedmondLoyaltyMiddleware.MiddlewareHandlers
 								{
 									CheckPromocodeLimit(dbContext, promocodes, warnings, promocodeInformation, poolInfo, contactId);
 								}
-
 							}
 							else 
 							{
