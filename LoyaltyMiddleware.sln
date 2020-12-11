@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedmondLoyaltyMiddleware", "LoyaltyMiddleware\RedmondLoyaltyMiddleware.csproj", "{47D7E015-A1E0-4365-8103-8DD219A8DF49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedmondPersonalAreaIntegrationService", "RedmondPersonalAreaIntegrationService\RedmondPersonalAreaIntegrationService.csproj", "{EB4CCDFE-688E-439C-98CD-9D744F6B8AF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedmondIntegrationService", "RedmondIntegrationService\RedmondIntegrationService.csproj", "{B3DF1119-84B4-4D09-844F-6AE14BC496F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{47D7E015-A1E0-4365-8103-8DD219A8DF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47D7E015-A1E0-4365-8103-8DD219A8DF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47D7E015-A1E0-4365-8103-8DD219A8DF49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB4CCDFE-688E-439C-98CD-9D744F6B8AF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB4CCDFE-688E-439C-98CD-9D744F6B8AF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB4CCDFE-688E-439C-98CD-9D744F6B8AF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB4CCDFE-688E-439C-98CD-9D744F6B8AF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3DF1119-84B4-4D09-844F-6AE14BC496F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DF1119-84B4-4D09-844F-6AE14BC496F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DF1119-84B4-4D09-844F-6AE14BC496F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DF1119-84B4-4D09-844F-6AE14BC496F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
