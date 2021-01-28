@@ -57,6 +57,29 @@ namespace RedmondLoyaltyMiddleware.Controllers
 			return BadRequest();
 		}
 
+
+		[HttpPost("UpdateSetting")]
+		public ActionResult UpdateSetting([FromBody] UpdateSettingRequest request)
+		{
+			var setting = _dbContext.Setting.FirstOrDefault(s => s.Code == request.Code);
+			if (setting == null)
+			{
+				setting = new Setting();
+				setting.Code = request.Code;
+				_dbContext.Add(setting);
+			}
+			else 
+			{
+				_dbContext.Update(setting);
+			}
+
+			setting.Value = request.Value;
+
+			_dbContext.SaveChanges();
+
+			return Ok();
+		}
+		
 		[HttpPost("update")]
 		public ActionResult Update([FromBody] Dictionary<string, object> request)
 		{
@@ -122,6 +145,12 @@ namespace RedmondLoyaltyMiddleware.Controllers
 		public ActionResult LoadContactPack([FromBody] IEnumerable<ContactProcessingModel> contacts)
 		{
 			return new ContactManager().LoadPack(contacts);
+		}
+
+		public class UpdateSettingRequest
+		{
+			public string Code { get; set; }
+			public string Value { get; set; }
 		}
 	}
 }

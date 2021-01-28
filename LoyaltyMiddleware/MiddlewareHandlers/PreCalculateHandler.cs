@@ -17,6 +17,22 @@ namespace RedmondLoyaltyMiddleware.MiddlewareHandlers
 		public PreHandlerResult GetHandledRequest(Dictionary<string, object> requestData, MiddlewareDBContext dbContext)
 		{
 			var result = new PreHandlerResult();
+
+			if (Decimal.TryParse(dbContext.Setting.FirstOrDefault(s => s.Code == "MinProductPrice")?.Value, out decimal minPrice) && minPrice > 0)
+			{
+				if (requestData.ContainsKey("products"))
+				{
+					var products = requestData["products"] as Newtonsoft.Json.Linq.JArray;
+					if (products != null && products.Count > 0)
+					{
+						foreach (JObject product in products) 
+						{
+							product.Add("minPrice", minPrice);
+						}
+					}
+				}
+			}
+
 			if (requestData.ContainsKey("promoCodes"))
 			{
 				var promocodes = requestData["promoCodes"] as Newtonsoft.Json.Linq.JArray;

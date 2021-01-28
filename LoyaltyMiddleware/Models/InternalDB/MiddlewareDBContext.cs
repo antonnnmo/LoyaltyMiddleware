@@ -21,5 +21,6 @@ namespace RedmondLoyaltyMiddleware.Models.InternalDB
 
 		public DbSet<PromocodeUseAttempt> PromocodeUseAttempts { get; set; }
 		public DbSet<PromocodePool> PromocodePools { get; set; }
+		public DbSet<Setting> Setting { get; set; }
 	}
 }
