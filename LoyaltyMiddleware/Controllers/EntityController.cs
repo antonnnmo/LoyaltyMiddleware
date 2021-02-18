@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using LoyaltyMiddleware;
@@ -147,9 +148,21 @@ namespace RedmondLoyaltyMiddleware.Controllers
 			return new ContactManager().LoadPack(contacts);
 		}
 
+
+		[HttpPost("GetProductSegments")]
+		public ActionResult GetProductSegments([FromBody] SegmentRequest request)
+		{
+			return new ProductPromotionManager().QueryProductSegment(request.Value);
+		}
+
+
 		public class UpdateSettingRequest
 		{
 			public string Code { get; set; }
+			public string Value { get; set; }
+		}
+		public class SegmentRequest
+		{
 			public string Value { get; set; }
 		}
 	}
